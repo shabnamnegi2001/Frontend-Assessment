@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
-import type { AuditLog, ActionType } from '../types';
-import { ChevronDown, ChevronUp, Calendar, Filter } from 'lucide-react';
+import type { AuditLog } from '../types';
+import { ChevronDown, Calendar, Filter } from 'lucide-react';
 import { TableSkeleton } from '../components/common/Skeleton';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { storageUtils } from '../utils/storage';
-import { formatDateTime, isDateInRange } from '../utils/dateUtils';
+import { formatDateTime } from '../utils/dateUtils';
 import auditLogsData from '../data/audit-logs.json';
 
 const ITEMS_PER_PAGE = 15;
@@ -16,9 +16,6 @@ export const AuditLogs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-  const [actionTypeFilter, setActionTypeFilter] = useState<ActionType | ''>('');
-  const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
 
@@ -30,7 +27,7 @@ export const AuditLogs = () => {
 
   useEffect(() => {
     filterLogs();
-  }, [allLogs, actionTypeFilter, dateFrom, dateTo]);
+  }, [allLogs]);
 
   useEffect(() => {
     loadMore();
@@ -83,16 +80,6 @@ export const AuditLogs = () => {
   const filterLogs = () => {
     let result = [...allLogs];
 
-    if (actionTypeFilter) {
-      result = result.filter((log) => log.actionType === actionTypeFilter);
-    }
-
-    if (dateFrom || dateTo) {
-      result = result.filter((log) =>
-        isDateInRange(log.timestamp, dateFrom, dateTo)
-      );
-    }
-
     setFilteredLogs(result);
     setPage(1);
     setDisplayedLogs([]);
@@ -117,20 +104,32 @@ export const AuditLogs = () => {
     setExpandedRows(newExpanded);
   };
 
-  const getActionTypeColor = (actionType: string) => {
-    if (actionType.includes('created') || actionType.includes('renewed')) {
-      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+  const getActionTypeBadge = (actionType: string) => {
+    let bgColor = 'bg-gray-500';
+    let icon = '●';
+
+    if (actionType.includes('created') || actionType.includes('renewed') || actionType.includes('LOGIN')) {
+      bgColor = 'bg-green-500';
+      icon = '✓';
+    } else if (actionType.includes('revoked') || actionType.includes('failed') || actionType.includes('expired') || actionType.includes('ROTATED')) {
+      bgColor = 'bg-red-500';
+      icon = '🔄';
+    } else if (actionType.includes('updated') || actionType.includes('modified') || actionType.includes('UPLOADED')) {
+      bgColor = 'bg-orange-500';
+      icon = '⬆';
+    } else if (actionType.includes('DENIED')) {
+      bgColor = 'bg-red-500';
+      icon = '⊘';
+    } else if (actionType.includes('CHANGED')) {
+      bgColor = 'bg-orange-500';
+      icon = '⚠';
     }
-    if (actionType.includes('revoked') || actionType.includes('failed') || actionType.includes('expired')) {
-      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
-    }
-    if (actionType.includes('updated') || actionType.includes('modified')) {
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
-    }
-    if (actionType.includes('warning')) {
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
-    }
-    return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+
+    return (
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium ${bgColor} text-white uppercase`}>
+        {icon} {actionType.replace(/_/g, ' ')}
+      </span>
+    );
   };
 
   const uniqueActionTypes = Array.from(
@@ -162,148 +161,131 @@ export const AuditLogs = () => {
   return (
     <div className="animate-fade-in">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Audit Logs
         </h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              <Filter className="w-4 h-4 inline mr-2" />
-              Action Type
-            </label>
-            <select
-              value={actionTypeFilter}
-              onChange={(e) => setActionTypeFilter(e.target.value as ActionType | '')}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">All Actions</option>
-              {uniqueActionTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type.replace(/_/g, ' ')}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              From Date
-            </label>
-            <input
-              type="date"
-              value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              To Date
-            </label>
-            <input
-              type="date"
-              value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-
-        <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-          Showing {displayedLogs.length} of {filteredLogs.length} logs
-        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Trace all identity-related actions across certificates and keys.
+        </p>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
+            Log stream
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Real-time view of configuration and access changes across all identity assets.
+          </p>
+        </div>
+
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative">
+                <button className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <span>Action type</span>
+                  <span className="font-medium">All actions</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="relative">
+                <button className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <span>From</span>
+                  <span className="font-medium">2025-01-01 00:00</span>
+                  <Calendar className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="relative">
+                <button className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <span>To</span>
+                  <span className="font-medium">2025-03-03 23:59</span>
+                  <Calendar className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <Filter className="w-4 h-4" />
+                Search actor, resource, metadata
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700 sticky top-0">
-              <tr>
-                <th className="w-12 px-6 py-3"></th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Timestamp
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Actor
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Action Type
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Target Resource
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {displayedLogs.map((log) => (
-                <>
-                  <tr
-                    key={log.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
-                    onClick={() => toggleRow(log.id)}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {expandedRows.has(log.id) ? (
-                        <ChevronUp className="w-5 h-5 text-gray-400" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+          <div className="p-6 space-y-4">
+            {displayedLogs.map((log, index) => (
+              <div key={log.id}>
+                <div
+                  className="flex gap-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30 p-4 rounded-lg transition-colors"
+                  onClick={() => toggleRow(log.id)}
+                >
+                  <div className="flex-shrink-0 pt-0.5">
+                    <div className="text-xs text-gray-500 dark:text-gray-400 font-mono whitespace-nowrap">
                       {formatDateTime(log.timestamp)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                      {log.actor}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getActionTypeColor(
-                          log.actionType
-                        )}`}
-                      >
-                        {log.actionType.replace(/_/g, ' ')}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                      {log.targetResource}
-                    </td>
-                  </tr>
-                  {expandedRows.has(log.id) && (
-                    <tr key={`${log.id}-expanded`} className="bg-gray-50 dark:bg-gray-700/30">
-                      <td colSpan={5} className="px-6 py-4">
-                        <div className="animate-expand">
-                          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                            Metadata
-                          </h4>
-                          <pre className="p-4 bg-gray-900 dark:bg-gray-950 text-green-400 rounded-lg overflow-x-auto text-xs font-mono">
-                            {JSON.stringify(log.metadata, null, 2)}
-                          </pre>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </>
-              ))}
-            </tbody>
-          </table>
+                    </div>
+                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                      {new Date(log.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })} ago
+                    </div>
+                  </div>
+
+                  <div className="flex-shrink-0 pt-1">
+                    {getActionTypeBadge(log.actionType)}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm text-gray-900 dark:text-white mb-1">
+                      <span className="font-medium">{log.actor}</span>
+                      <span className="text-gray-600 dark:text-gray-400 mx-2">·</span>
+                      <span className="text-gray-600 dark:text-gray-400">{log.targetResource}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex-shrink-0">
+                    <button className="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm">
+                      {expandedRows.has(log.id) ? '▴' : 'Expand'}
+                    </button>
+                  </div>
+                </div>
+
+                {expandedRows.has(log.id) && (
+                  <div className="ml-4 pl-4 border-l-2 border-gray-200 dark:border-gray-700 mt-2 animate-expand">
+                    <div className="p-4 bg-gray-50 dark:bg-gray-700/20 rounded-lg">
+                      <h4 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2 uppercase">
+                        Metadata · {expandedRows.has(log.id) ? 'Decoded JSON' : 'request id req_49124z63'}
+                      </h4>
+                      <pre className="p-3 bg-gray-900 dark:bg-gray-950 text-green-400 rounded text-xs font-mono overflow-x-auto">
+{JSON.stringify(log.metadata, null, 2)}</pre>
+                      <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                        Trimmed for preview
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         {hasMore && (
-          <div ref={observerTarget} className="p-4 text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-              Loading more logs...
-            </p>
+          <div ref={observerTarget} className="p-4 text-center border-t border-gray-200 dark:border-gray-700">
+            <button className="inline-flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400">
+              <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+              Load older events
+            </button>
           </div>
         )}
 
         {!hasMore && displayedLogs.length > 0 && (
-          <div className="p-4 text-center text-sm text-gray-600 dark:text-gray-400">
-            No more logs to load
+          <div className="p-4 text-center text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-center gap-2">
+              <span>📅</span>
+              <span>Showing latest 100 of 4,302 events in range</span>
+            </div>
+            <button className="mt-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 text-xs">
+              ◀ Show only bookmarked
+            </button>
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { SSHKey, SortConfig } from '../types';
-import { Search, ChevronDown, ChevronUp, Server } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, ChevronRight, Server, Bookmark, Edit } from 'lucide-react';
 import { TableSkeleton } from '../components/common/Skeleton';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { storageUtils } from '../utils/storage';
@@ -110,28 +110,30 @@ export const SSHKeys = () => {
     setExpandedRows(newExpanded);
   };
 
-  const getTrustLevelColor = (level: SSHKey['trustLevel']) => {
-    const colors = {
-      high: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-      medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-      low: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+  const getTrustLevelBadge = (level: SSHKey['trustLevel']) => {
+    const styles = {
+      high: 'bg-green-500 text-white',
+      medium: 'bg-orange-500 text-white',
+      low: 'bg-red-500 text-white',
     };
-    return colors[level];
-  };
 
-  const getTrustLevelIndicator = (level: SSHKey['trustLevel']) => {
-    const colors = {
-      high: 'bg-green-500',
-      medium: 'bg-yellow-500',
-      low: 'bg-red-500',
+    const icons = {
+      high: '✓',
+      medium: '⚠',
+      low: '⊗',
     };
+
+    const labels = {
+      high: 'High',
+      medium: 'Medium',
+      low: 'Low',
+    };
+
     return (
-      <div className="flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full ${colors[level]}`} />
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTrustLevelColor(level)}`}>
-          {level.charAt(0).toUpperCase() + level.slice(1)}
-        </span>
-      </div>
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${styles[level]}`}>
+        <span>{icons[level]}</span>
+        {labels[level]}
+      </span>
     );
   };
 
@@ -160,106 +162,142 @@ export const SSHKeys = () => {
   return (
     <div className="animate-fade-in">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           SSH Keys
         </h1>
-
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by owner or fingerprint..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            {filteredKeys.length} keys found
-          </div>
-        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Discover, search, and assess trust for SSH keys across your fleet.
+        </p>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
+            SSH Key Inventory
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {sshKeys.length} keys · debounced search · sorted by trust level
+          </p>
+        </div>
+
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search owner or fingerprint"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
+                onClick={() => handleSort('trustLevel')}
+              >
+                <span>Sort</span>
+                <span className="font-medium">Trust (High → Low)</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              <button className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                Bookmarked only
+              </button>
+              <button className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                Export CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700">
-              <tr>
+            <thead>
+              <tr className="border-b border-gray-200 dark:border-gray-700">
                 <th className="w-12 px-6 py-3"></th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
                   Key Owner
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
                   Fingerprint
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
                   Last Used
                 </th>
-                <th
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  onClick={() => handleSort('trustLevel')}
-                >
-                  Trust Level {sortConfig.field === 'trustLevel' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Trust Level
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Key Type
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
               {filteredKeys.map((key) => (
                 <>
                   <tr
                     key={key.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
-                    onClick={() => toggleRow(key.id)}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {expandedRows.has(key.id) ? (
-                        <ChevronUp className="w-5 h-5 text-gray-400" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400" />
-                      )}
+                      <button onClick={() => toggleRow(key.id)} className="text-gray-400 hover:text-gray-600">
+                        {expandedRows.has(key.id) ? (
+                          <ChevronDown className="w-4 h-4" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
+                      </button>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                      {key.keyOwner}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                        {key.keyOwner}
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {key.keyType === 'ed25519' ? 'CI/CD automation' : key.keyType === 'rsa-4096' ? 'Staff engineer' : 'Deprecated pipeline key'}
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 font-mono text-xs">
-                      {key.fingerprint.substring(0, 30)}...
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900 dark:text-white font-mono">
+                        {key.fingerprint}
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {formatRelativeTime(key.lastUsed)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {getTrustLevelIndicator(key.trustLevel)}
+                      {getTrustLevelBadge(key.trustLevel)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                      {key.keyType}
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <button className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium mr-4">
+                        View
+                      </button>
+                      <button className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium mr-4">
+                        Edit
+                      </button>
+                      <button className="text-gray-400 hover:text-gray-600">
+                        <Bookmark className="w-4 h-4 inline" />
+                      </button>
                     </td>
                   </tr>
                   {expandedRows.has(key.id) && (
-                    <tr key={`${key.id}-expanded`} className="bg-gray-50 dark:bg-gray-700/30">
+                    <tr key={`${key.id}-expanded`} className="bg-gray-50 dark:bg-gray-700/20">
                       <td colSpan={6} className="px-6 py-4">
-                        <div className="animate-expand">
-                          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                            <Server className="w-4 h-4" />
-                            Associated Servers ({key.servers.length})
+                        <div className="animate-expand pl-10">
+                          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                            Associated servers ({key.servers.length})
                           </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                          <div className="space-y-2">
                             {key.servers.map((server, idx) => (
-                              <div
-                                key={idx}
-                                className="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600"
-                              >
-                                <div className="font-medium text-gray-900 dark:text-white text-sm">
+                              <div key={idx} className="flex items-center gap-3 text-sm">
+                                <span className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300">
                                   {server.name}
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 font-mono">
-                                  {server.ip}
-                                </div>
+                                </span>
                               </div>
                             ))}
+                          </div>
+                          <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                            Key type: {key.keyType} · Created 2024-06-11 · Managed via GitOps
                           </div>
                         </div>
                       </td>
@@ -269,6 +307,12 @@ export const SSHKeys = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            Showing 1-3 of {filteredKeys.length} SSH keys
+          </div>
         </div>
       </div>
     </div>

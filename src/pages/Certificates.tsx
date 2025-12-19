@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Certificate, SortConfig } from '../types';
-import { Eye, Edit, Search, Filter } from 'lucide-react';
+import { Eye, Edit, Search, ChevronDown, Download } from 'lucide-react';
 import { Modal } from '../components/common/Modal';
 import { Drawer } from '../components/common/Drawer';
 import { TableSkeleton } from '../components/common/Skeleton';
@@ -10,7 +10,7 @@ import { storageUtils } from '../utils/storage';
 import { formatDate, getDaysUntilExpiry } from '../utils/dateUtils';
 import certificatesData from '../data/certificates.json';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 export const Certificates = () => {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
@@ -122,23 +122,32 @@ export const Certificates = () => {
 
   const getStatusBadge = (status: Certificate['status']) => {
     const styles = {
-      active: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-      expired: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-      expiring_soon: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+      active: 'bg-green-500 text-white',
+      expired: 'bg-red-500 text-white',
+      expiring_soon: 'bg-orange-500 text-white',
+    };
+
+    const icons = {
+      active: '✓',
+      expired: '⊗',
+      expiring_soon: '⚠',
     };
 
     const labels = {
       active: 'Active',
       expired: 'Expired',
-      expiring_soon: 'Expiring Soon',
+      expiring_soon: 'Expiring soon',
     };
 
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
+        <span>{icons[status]}</span>
         {labels[status]}
       </span>
     );
   };
+
+  const expiringSoonCount = certificates.filter(c => c.status === 'expiring_soon').length;
 
   if (loading && certificates.length === 0) {
     return (
@@ -171,100 +180,131 @@ export const Certificates = () => {
   return (
     <div className="animate-fade-in">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Certificates
         </h1>
-
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Filter by domain..."
-              value={domainFilter}
-              onChange={(e) => setDomainFilter(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-            <Filter className="w-4 h-4" />
-            {filteredCerts.length} of {certificates.length} certificates
-          </div>
-        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Manage TLS certificates across your fleet.
+        </p>
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Certificate Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Domain
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Issuer
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Status
-                </th>
-                <th
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
+            Certificate Inventory
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {certificates.length} certificates · {expiringSoonCount} expiring in the next 30 days
+          </p>
+        </div>
+
+        {/* Filters */}
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+              <div className="relative">
+                <button className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <span>Domain</span>
+                  <span className="font-medium">All domains</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="relative">
+                <button
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
                   onClick={() => handleSort('expiryDate')}
                 >
-                  Expiry Date {sortConfig.field === 'expiryDate' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                  <span>Sort</span>
+                  <span className="font-medium">Expiry (soonest)</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div className="flex gap-3 w-full lg:w-auto">
+              <div className="relative">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Per page</span>
+                <button className="ml-2 inline-flex items-center gap-1 px-3 py-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm font-medium">
+                  {ITEMS_PER_PAGE}
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+              </div>
+              <button className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
+                Export CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-200 dark:border-gray-700">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Certificate Name
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Domain
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Issuer
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Expiry Date
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
               {paginatedData.map((cert) => (
                 <tr
                   key={cert.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
                     {cert.name}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                     {cert.domain}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                     {cert.issuer}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="px-6 py-4 text-sm">
                     {getStatusBadge(cert.status)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                    <div>{formatDate(cert.expiryDate)}</div>
-                    <div className="text-xs text-gray-400">
-                      {getDaysUntilExpiry(cert.expiryDate)} days
-                    </div>
+                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                    {formatDate(cert.expiryDate)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-6 py-4 text-right text-sm">
                     <button
                       onClick={() => handleView(cert)}
-                      className="text-blue-600 hover:text-blue-700 dark:text-blue-400 mr-3"
+                      className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium mr-4"
                     >
-                      <Eye className="w-4 h-4 inline" />
+                      View
                     </button>
                     <button
                       onClick={() => handleEdit(cert)}
-                      className="text-gray-600 hover:text-gray-700 dark:text-gray-400"
+                      className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
                     >
-                      <Edit className="w-4 h-4 inline" />
+                      Edit
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, filteredCerts.length)} of {filteredCerts.length} certificates
+          </div>
         </div>
 
         {totalPages > 1 && (

@@ -1,4 +1,4 @@
-import { Moon, Sun, User } from 'lucide-react';
+import { Moon, Sun, ChevronDown } from 'lucide-react';
 import { useThemeStore } from '../../store/themeStore';
 import { useState } from 'react';
 
@@ -15,13 +15,19 @@ export const TopNav = () => {
           {/* Dark mode toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             aria-label="Toggle dark mode"
           >
             {isDark ? (
-              <Sun className="w-5 h-5 text-yellow-500" />
+              <>
+                <Sun className="w-4 h-4" />
+                <span className="hidden sm:inline">Dark mode</span>
+              </>
             ) : (
-              <Moon className="w-5 h-5 text-gray-600" />
+              <>
+                <Moon className="w-4 h-4" />
+                <span className="hidden sm:inline">Light mode</span>
+              </>
             )}
           </button>
 
@@ -29,14 +35,22 @@ export const TopNav = () => {
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="flex items-center gap-3 pl-3 pr-2 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
-              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                <User className="w-5 h-5 text-white" />
+              <img
+                src="https://ui-avatars.com/api/?name=Jordan+Lee&background=3b82f6&color=fff&size=32"
+                alt="Jordan Lee"
+                className="w-8 h-8 rounded-full"
+              />
+              <div className="hidden md:block text-left">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  Jordan Lee
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Security Admin
+                </p>
               </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">
-                Admin User
-              </span>
+              <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
             </button>
 
             {showUserMenu && (
@@ -45,24 +59,29 @@ export const TopNav = () => {
                   className="fixed inset-0 z-10"
                   onClick={() => setShowUserMenu(false)}
                 />
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-20">
-                  <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-20">
+                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
-                      Admin User
+                      Jordan Lee
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      admin@example.com
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      jordan.lee@example.com
                     </p>
                   </div>
                   <button className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Profile
+                    Profile Settings
                   </button>
                   <button className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Settings
+                    Notifications
                   </button>
-                  <button className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Logout
+                  <button className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    Help & Support
                   </button>
+                  <div className="border-t border-gray-200 dark:border-gray-700 mt-1 pt-1">
+                    <button className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                      Sign Out
+                    </button>
+                  </div>
                 </div>
               </>
             )}
