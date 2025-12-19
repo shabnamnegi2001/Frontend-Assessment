@@ -1,0 +1,159 @@
+[
+  {
+    "id": "ssh-001",
+    "keyOwner": "john.doe@example.com",
+    "fingerprint": "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8",
+    "lastUsed": "2025-12-18T14:30:00Z",
+    "trustLevel": "high",
+    "keyType": "ed25519",
+    "createdAt": "2024-06-15T10:00:00Z",
+    "servers": [
+      { "name": "prod-web-01", "ip": "10.0.1.10" },
+      { "name": "prod-web-02", "ip": "10.0.1.11" },
+      { "name": "prod-db-01", "ip": "10.0.2.10" }
+    ]
+  },
+  {
+    "id": "ssh-002",
+    "keyOwner": "jane.smith@example.com",
+    "fingerprint": "SHA256:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU",
+    "lastUsed": "2025-12-17T09:15:00Z",
+    "trustLevel": "high",
+    "keyType": "rsa-4096",
+    "createdAt": "2024-03-20T08:30:00Z",
+    "servers": [
+      { "name": "prod-api-01", "ip": "10.0.3.10" },
+      { "name": "prod-api-02", "ip": "10.0.3.11" }
+    ]
+  },
+  {
+    "id": "ssh-003",
+    "keyOwner": "dev.team@example.com",
+    "fingerprint": "SHA256:LCa0a2j/xo/5m0U8HTBBNBNCLXBkg7+g+YpeiGJm564",
+    "lastUsed": "2025-12-15T16:45:00Z",
+    "trustLevel": "medium",
+    "keyType": "ed25519",
+    "createdAt": "2024-09-10T12:00:00Z",
+    "servers": [
+      { "name": "staging-web-01", "ip": "10.1.1.10" },
+      { "name": "staging-api-01", "ip": "10.1.2.10" },
+      { "name": "dev-build-01", "ip": "10.2.1.10" }
+    ]
+  },
+  {
+    "id": "ssh-004",
+    "keyOwner": "admin@example.com",
+    "fingerprint": "SHA256:Y+Qpt68wJgYXr4wJNgXIBfPXrFJzXlp5FdQQnGxLXoA",
+    "lastUsed": "2025-11-30T11:20:00Z",
+    "trustLevel": "low",
+    "keyType": "rsa-2048",
+    "createdAt": "2023-01-15T09:00:00Z",
+    "servers": [
+      { "name": "legacy-app-01", "ip": "10.5.1.10" }
+    ]
+  },
+  {
+    "id": "ssh-005",
+    "keyOwner": "ci-cd-bot@example.com",
+    "fingerprint": "SHA256:3E8wKJbg1nZV5xfB6YvJkWXBqR8YUzBXsElLGLjXqP4",
+    "lastUsed": "2025-12-19T06:00:00Z",
+    "trustLevel": "high",
+    "keyType": "ed25519",
+    "createdAt": "2024-11-01T14:30:00Z",
+    "servers": [
+      { "name": "ci-runner-01", "ip": "10.3.1.10" },
+      { "name": "ci-runner-02", "ip": "10.3.1.11" },
+      { "name": "ci-runner-03", "ip": "10.3.1.12" },
+      { "name": "deploy-server-01", "ip": "10.3.2.10" }
+    ]
+  },
+  {
+    "id": "ssh-006",
+    "keyOwner": "backup-service@example.com",
+    "fingerprint": "SHA256:mVPKvGJjJvVNy5xGS4L8FqDlUzBXdWbDXRqYQKJk7C0",
+    "lastUsed": "2025-12-19T02:00:00Z",
+    "trustLevel": "medium",
+    "keyType": "rsa-4096",
+    "createdAt": "2024-07-22T10:15:00Z",
+    "servers": [
+      { "name": "backup-server-01", "ip": "10.4.1.10" },
+      { "name": "backup-server-02", "ip": "10.4.1.11" }
+    ]
+  },
+  {
+    "id": "ssh-007",
+    "keyOwner": "monitoring@example.com",
+    "fingerprint": "SHA256:bQFGkWJjJQqXxLb8VyN5DJgHLzBXdPqRYQKJk8D1E2F",
+    "lastUsed": "2025-12-18T23:45:00Z",
+    "trustLevel": "high",
+    "keyType": "ed25519",
+    "createdAt": "2024-08-05T11:00:00Z",
+    "servers": [
+      { "name": "monitor-01", "ip": "10.6.1.10" }
+    ]
+  },
+  {
+    "id": "ssh-008",
+    "keyOwner": "contractor-alice@external.com",
+    "fingerprint": "SHA256:cRHIlXKkKRrYyMc9WzO6EKhIMACYeQsSTZRLJl9E3G4",
+    "lastUsed": "2025-10-12T15:30:00Z",
+    "trustLevel": "low",
+    "keyType": "rsa-2048",
+    "createdAt": "2025-09-01T09:00:00Z",
+    "servers": [
+      { "name": "dev-sandbox-01", "ip": "10.7.1.10" }
+    ]
+  },
+  {
+    "id": "ssh-009",
+    "keyOwner": "database-admin@example.com",
+    "fingerprint": "SHA256:dSIJmYLlLSsZzNdA0pX7FLiJNBDZfRtTUaSMKmAF4H5",
+    "lastUsed": "2025-12-16T10:00:00Z",
+    "trustLevel": "high",
+    "keyType": "ed25519",
+    "createdAt": "2024-05-12T13:20:00Z",
+    "servers": [
+      { "name": "prod-db-01", "ip": "10.0.2.10" },
+      { "name": "prod-db-02", "ip": "10.0.2.11" },
+      { "name": "prod-db-replica-01", "ip": "10.0.2.20" }
+    ]
+  },
+  {
+    "id": "ssh-010",
+    "keyOwner": "security-audit@example.com",
+    "fingerprint": "SHA256:eTJKnZMmMTtaAOeB1qY8GMjKOCEagSuUVbTNLnBG5I6",
+    "lastUsed": "2025-12-10T08:30:00Z",
+    "trustLevel": "medium",
+    "keyType": "rsa-4096",
+    "createdAt": "2024-04-18T15:45:00Z",
+    "servers": [
+      { "name": "audit-server-01", "ip": "10.8.1.10" }
+    ]
+  },
+  {
+    "id": "ssh-011",
+    "keyOwner": "load-balancer@example.com",
+    "fingerprint": "SHA256:fUKLoaNnNUubBPfC2rZ9HNkLPDFbhTvVWcUOMoBH6J7",
+    "lastUsed": "2025-12-19T01:15:00Z",
+    "trustLevel": "high",
+    "keyType": "ed25519",
+    "createdAt": "2024-10-05T12:30:00Z",
+    "servers": [
+      { "name": "lb-01", "ip": "10.9.1.10" },
+      { "name": "lb-02", "ip": "10.9.1.11" }
+    ]
+  },
+  {
+    "id": "ssh-012",
+    "keyOwner": "test-automation@example.com",
+    "fingerprint": "SHA256:gVLMpbOoOVvcCQgD3saAIOlMQEGciUwWXdVPNpCI7K8",
+    "lastUsed": "2025-12-14T19:00:00Z",
+    "trustLevel": "medium",
+    "keyType": "rsa-2048",
+    "createdAt": "2024-12-01T10:00:00Z",
+    "servers": [
+      { "name": "test-env-01", "ip": "10.10.1.10" },
+      { "name": "test-env-02", "ip": "10.10.1.11" }
+    ]
+  }
+]

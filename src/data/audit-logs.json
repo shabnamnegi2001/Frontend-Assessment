@@ -1,0 +1,412 @@
+[
+  {
+    "id": "log-001",
+    "timestamp": "2025-12-19T08:45:23Z",
+    "actor": "john.doe@example.com",
+    "actionType": "certificate_renewed",
+    "targetResource": "Main Production SSL",
+    "metadata": {
+      "certificateId": "cert-001",
+      "domain": "example.com",
+      "previousExpiry": "2025-06-15T00:00:00Z",
+      "newExpiry": "2026-06-15T00:00:00Z",
+      "autoRenewed": false
+    }
+  },
+  {
+    "id": "log-002",
+    "timestamp": "2025-12-19T07:30:15Z",
+    "actor": "ci-cd-bot@example.com",
+    "actionType": "ssh_key_used",
+    "targetResource": "ci-runner-01",
+    "metadata": {
+      "sshKeyId": "ssh-005",
+      "serverIp": "10.3.1.10",
+      "command": "deploy-application",
+      "duration": 45,
+      "success": true
+    }
+  },
+  {
+    "id": "log-003",
+    "timestamp": "2025-12-19T06:15:42Z",
+    "actor": "jane.smith@example.com",
+    "actionType": "code_signing_key_created",
+    "targetResource": "code-commit-signing",
+    "metadata": {
+      "keyId": "csk-015",
+      "algorithm": "ECDSA-256",
+      "protectionLevel": "Software",
+      "purpose": "Git Commit Signing"
+    }
+  },
+  {
+    "id": "log-004",
+    "timestamp": "2025-12-19T05:20:18Z",
+    "actor": "system",
+    "actionType": "certificate_expiry_warning",
+    "targetResource": "Development Wildcard",
+    "metadata": {
+      "certificateId": "cert-003",
+      "domain": "*.dev.example.com",
+      "daysUntilExpiry": 6,
+      "notificationSent": true,
+      "recipients": ["admin@example.com", "devops@example.com"]
+    }
+  },
+  {
+    "id": "log-005",
+    "timestamp": "2025-12-19T04:10:33Z",
+    "actor": "admin@example.com",
+    "actionType": "ssh_key_revoked",
+    "targetResource": "contractor-alice@external.com",
+    "metadata": {
+      "sshKeyId": "ssh-008",
+      "reason": "Contract ended",
+      "revokedServers": ["dev-sandbox-01"],
+      "effectiveImmediately": true
+    }
+  },
+  {
+    "id": "log-006",
+    "timestamp": "2025-12-19T03:45:27Z",
+    "actor": "backup-service@example.com",
+    "actionType": "ssh_key_used",
+    "targetResource": "backup-server-01",
+    "metadata": {
+      "sshKeyId": "ssh-006",
+      "serverIp": "10.4.1.10",
+      "command": "backup-databases",
+      "duration": 3600,
+      "success": true,
+      "backupSize": "45.2 GB"
+    }
+  },
+  {
+    "id": "log-007",
+    "timestamp": "2025-12-19T02:30:55Z",
+    "actor": "security-audit@example.com",
+    "actionType": "access_review_completed",
+    "targetResource": "All SSH Keys",
+    "metadata": {
+      "totalKeysReviewed": 12,
+      "keysRevoked": 1,
+      "keysFlagged": 2,
+      "reviewType": "quarterly",
+      "findings": "One deprecated key identified"
+    }
+  },
+  {
+    "id": "log-008",
+    "timestamp": "2025-12-19T01:15:12Z",
+    "actor": "monitoring@example.com",
+    "actionType": "ssh_key_used",
+    "targetResource": "monitor-01",
+    "metadata": {
+      "sshKeyId": "ssh-007",
+      "serverIp": "10.6.1.10",
+      "command": "health-check",
+      "duration": 2,
+      "success": true
+    }
+  },
+  {
+    "id": "log-009",
+    "timestamp": "2025-12-18T23:50:08Z",
+    "actor": "john.doe@example.com",
+    "actionType": "certificate_viewed",
+    "targetResource": "API Gateway Certificate",
+    "metadata": {
+      "certificateId": "cert-002",
+      "viewedFields": ["serialNumber", "algorithm", "issuer"],
+      "accessMethod": "web_console"
+    }
+  },
+  {
+    "id": "log-010",
+    "timestamp": "2025-12-18T22:35:44Z",
+    "actor": "system",
+    "actionType": "code_signing_key_rotated",
+    "targetResource": "api-jwt-signing",
+    "metadata": {
+      "oldKeyId": "csk-012-old",
+      "newKeyId": "csk-012",
+      "rotationReason": "scheduled_rotation",
+      "gracePeriod": "30 days",
+      "autoRotated": true
+    }
+  },
+  {
+    "id": "log-011",
+    "timestamp": "2025-12-18T21:20:19Z",
+    "actor": "database-admin@example.com",
+    "actionType": "ssh_key_used",
+    "targetResource": "prod-db-01",
+    "metadata": {
+      "sshKeyId": "ssh-009",
+      "serverIp": "10.0.2.10",
+      "command": "database-maintenance",
+      "duration": 120,
+      "success": true
+    }
+  },
+  {
+    "id": "log-012",
+    "timestamp": "2025-12-18T20:10:55Z",
+    "actor": "jane.smith@example.com",
+    "actionType": "certificate_updated",
+    "targetResource": "Admin Portal SSL",
+    "metadata": {
+      "certificateId": "cert-009",
+      "updatedFields": ["domain", "issuer"],
+      "previousDomain": "old-admin.example.com",
+      "newDomain": "admin.example.com"
+    }
+  },
+  {
+    "id": "log-013",
+    "timestamp": "2025-12-18T19:05:32Z",
+    "actor": "system",
+    "actionType": "failed_authentication",
+    "targetResource": "prod-web-01",
+    "metadata": {
+      "attemptedKey": "unknown",
+      "sourceIp": "203.0.113.45",
+      "serverIp": "10.0.1.10",
+      "attemptCount": 3,
+      "blocked": true
+    }
+  },
+  {
+    "id": "log-014",
+    "timestamp": "2025-12-18T18:45:21Z",
+    "actor": "ci-cd-bot@example.com",
+    "actionType": "code_signing_key_used",
+    "targetResource": "android-release-key",
+    "metadata": {
+      "keyId": "csk-001",
+      "signedArtifact": "app-v2.3.1.apk",
+      "buildNumber": "2451",
+      "success": true
+    }
+  },
+  {
+    "id": "log-015",
+    "timestamp": "2025-12-18T17:30:47Z",
+    "actor": "admin@example.com",
+    "actionType": "ssh_key_created",
+    "targetResource": "load-balancer@example.com",
+    "metadata": {
+      "sshKeyId": "ssh-011",
+      "keyType": "ed25519",
+      "trustLevel": "high",
+      "assignedServers": ["lb-01", "lb-02"]
+    }
+  },
+  {
+    "id": "log-016",
+    "timestamp": "2025-12-18T16:20:13Z",
+    "actor": "john.doe@example.com",
+    "actionType": "certificate_exported",
+    "targetResource": "Payment Gateway SSL",
+    "metadata": {
+      "certificateId": "cert-015",
+      "exportFormat": "PEM",
+      "includePrivateKey": false,
+      "exportReason": "Third-party integration"
+    }
+  },
+  {
+    "id": "log-017",
+    "timestamp": "2025-12-18T15:15:28Z",
+    "actor": "test-automation@example.com",
+    "actionType": "ssh_key_used",
+    "targetResource": "test-env-01",
+    "metadata": {
+      "sshKeyId": "ssh-012",
+      "serverIp": "10.10.1.10",
+      "command": "run-integration-tests",
+      "duration": 1800,
+      "success": true,
+      "testsRun": 245
+    }
+  },
+  {
+    "id": "log-018",
+    "timestamp": "2025-12-18T14:10:05Z",
+    "actor": "system",
+    "actionType": "certificate_auto_renewed",
+    "targetResource": "CDN Certificate",
+    "metadata": {
+      "certificateId": "cert-005",
+      "domain": "cdn.example.com",
+      "renewalAttempt": 1,
+      "success": true,
+      "newExpiry": "2027-03-20T00:00:00Z"
+    }
+  },
+  {
+    "id": "log-019",
+    "timestamp": "2025-12-18T13:05:42Z",
+    "actor": "jane.smith@example.com",
+    "actionType": "code_signing_key_updated",
+    "targetResource": "docker-image-signing",
+    "metadata": {
+      "keyId": "csk-006",
+      "updatedProperties": ["description", "tags"],
+      "newTags": ["production", "critical"]
+    }
+  },
+  {
+    "id": "log-020",
+    "timestamp": "2025-12-18T12:00:19Z",
+    "actor": "security-audit@example.com",
+    "actionType": "compliance_scan_completed",
+    "targetResource": "All Certificates",
+    "metadata": {
+      "scanType": "PCI-DSS",
+      "totalCertificates": 15,
+      "compliant": 12,
+      "nonCompliant": 3,
+      "issues": ["2 expired", "1 weak algorithm"]
+    }
+  },
+  {
+    "id": "log-021",
+    "timestamp": "2025-12-18T11:45:33Z",
+    "actor": "admin@example.com",
+    "actionType": "settings_modified",
+    "targetResource": "Auto-renewal Policy",
+    "metadata": {
+      "settingChanged": "certificate_auto_renewal",
+      "previousValue": false,
+      "newValue": true,
+      "affectedCertificates": ["cert-001", "cert-005", "cert-006"]
+    }
+  },
+  {
+    "id": "log-022",
+    "timestamp": "2025-12-18T10:30:27Z",
+    "actor": "ci-cd-bot@example.com",
+    "actionType": "code_signing_key_used",
+    "targetResource": "npm-package-signing",
+    "metadata": {
+      "keyId": "csk-005",
+      "signedPackage": "@company/core-lib@5.2.0",
+      "registry": "npmjs.com",
+      "success": true
+    }
+  },
+  {
+    "id": "log-023",
+    "timestamp": "2025-12-18T09:20:15Z",
+    "actor": "john.doe@example.com",
+    "actionType": "ssh_key_updated",
+    "targetResource": "john.doe@example.com",
+    "metadata": {
+      "sshKeyId": "ssh-001",
+      "updatedProperty": "servers",
+      "addedServers": ["prod-cache-01"],
+      "reason": "New cache server access required"
+    }
+  },
+  {
+    "id": "log-024",
+    "timestamp": "2025-12-18T08:15:08Z",
+    "actor": "system",
+    "actionType": "health_check_failed",
+    "targetResource": "Legacy Backend SSL",
+    "metadata": {
+      "certificateId": "cert-004",
+      "failureReason": "Certificate expired",
+      "impact": "Service degraded",
+      "alertsSent": true
+    }
+  },
+  {
+    "id": "log-025",
+    "timestamp": "2025-12-18T07:10:52Z",
+    "actor": "monitoring@example.com",
+    "actionType": "report_generated",
+    "targetResource": "Monthly Security Report",
+    "metadata": {
+      "reportType": "security_summary",
+      "period": "2025-11",
+      "metrics": {
+        "totalCertificates": 15,
+        "totalSSHKeys": 12,
+        "totalCodeSigningKeys": 15,
+        "securityIncidents": 2
+      }
+    }
+  },
+  {
+    "id": "log-026",
+    "timestamp": "2025-12-18T06:05:34Z",
+    "actor": "backup-service@example.com",
+    "actionType": "ssh_key_used",
+    "targetResource": "backup-server-02",
+    "metadata": {
+      "sshKeyId": "ssh-006",
+      "serverIp": "10.4.1.11",
+      "command": "verify-backups",
+      "duration": 600,
+      "success": true,
+      "backupsVerified": 127
+    }
+  },
+  {
+    "id": "log-027",
+    "timestamp": "2025-12-18T05:00:19Z",
+    "actor": "system",
+    "actionType": "certificate_discovery",
+    "targetResource": "Staging Environment",
+    "metadata": {
+      "certificateId": "cert-008",
+      "discoveryMethod": "network_scan",
+      "autoImported": true,
+      "domain": "staging.example.com"
+    }
+  },
+  {
+    "id": "log-028",
+    "timestamp": "2025-12-18T04:45:41Z",
+    "actor": "database-admin@example.com",
+    "actionType": "ssh_key_used",
+    "targetResource": "prod-db-replica-01",
+    "metadata": {
+      "sshKeyId": "ssh-009",
+      "serverIp": "10.0.2.20",
+      "command": "replication-check",
+      "duration": 30,
+      "success": true,
+      "lagSeconds": 0.5
+    }
+  },
+  {
+    "id": "log-029",
+    "timestamp": "2025-12-18T03:30:25Z",
+    "actor": "jane.smith@example.com",
+    "actionType": "code_signing_key_exported",
+    "targetResource": "ios-distribution",
+    "metadata": {
+      "keyId": "csk-002",
+      "exportFormat": "P12",
+      "passwordProtected": true,
+      "exportReason": "CI/CD configuration"
+    }
+  },
+  {
+    "id": "log-030",
+    "timestamp": "2025-12-18T02:20:13Z",
+    "actor": "system",
+    "actionType": "automated_cleanup",
+    "targetResource": "Audit Logs",
+    "metadata": {
+      "retentionPolicy": "90 days",
+      "logsArchived": 1247,
+      "logsDeleted": 0,
+      "archiveLocation": "s3://audit-archive/2025-09"
+    }
+  }
+]

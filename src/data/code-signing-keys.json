@@ -1,0 +1,167 @@
+[
+  {
+    "id": "csk-001",
+    "keyAlias": "android-release-key",
+    "algorithm": "RSA-4096",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "lastUsed": "2025-12-18T16:30:00Z",
+    "expiryDate": "2027-01-15T10:00:00Z",
+    "usage": "Android App Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-002",
+    "keyAlias": "ios-distribution",
+    "algorithm": "ECDSA-384",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-02-10T11:30:00Z",
+    "lastUsed": "2025-12-17T14:20:00Z",
+    "expiryDate": "2026-02-10T11:30:00Z",
+    "usage": "iOS App Distribution",
+    "status": "active"
+  },
+  {
+    "id": "csk-003",
+    "keyAlias": "windows-authenticode",
+    "algorithm": "RSA-2048",
+    "protectionLevel": "Software",
+    "createdAt": "2023-06-20T09:00:00Z",
+    "lastUsed": "2025-11-30T10:15:00Z",
+    "expiryDate": "2025-06-20T09:00:00Z",
+    "usage": "Windows Binary Signing",
+    "status": "expired"
+  },
+  {
+    "id": "csk-004",
+    "keyAlias": "macos-developer-id",
+    "algorithm": "ECDSA-256",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-03-05T13:45:00Z",
+    "lastUsed": "2025-12-15T09:30:00Z",
+    "expiryDate": "2026-03-05T13:45:00Z",
+    "usage": "macOS Application Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-005",
+    "keyAlias": "npm-package-signing",
+    "algorithm": "RSA-4096",
+    "protectionLevel": "Software",
+    "createdAt": "2024-05-12T08:00:00Z",
+    "lastUsed": "2025-12-19T07:45:00Z",
+    "expiryDate": "2026-05-12T08:00:00Z",
+    "usage": "NPM Package Verification",
+    "status": "active"
+  },
+  {
+    "id": "csk-006",
+    "keyAlias": "docker-image-signing",
+    "algorithm": "ECDSA-384",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-07-18T14:20:00Z",
+    "lastUsed": "2025-12-19T03:00:00Z",
+    "expiryDate": "2027-07-18T14:20:00Z",
+    "usage": "Container Image Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-007",
+    "keyAlias": "pdf-document-signing",
+    "algorithm": "RSA-2048",
+    "protectionLevel": "Software",
+    "createdAt": "2024-04-22T10:30:00Z",
+    "lastUsed": "2025-12-12T11:00:00Z",
+    "expiryDate": "2026-04-22T10:30:00Z",
+    "usage": "PDF Digital Signatures",
+    "status": "active"
+  },
+  {
+    "id": "csk-008",
+    "keyAlias": "java-jar-signing",
+    "algorithm": "RSA-4096",
+    "protectionLevel": "Software",
+    "createdAt": "2023-09-14T15:00:00Z",
+    "lastUsed": "2025-08-20T13:30:00Z",
+    "expiryDate": "2025-09-14T15:00:00Z",
+    "usage": "Java JAR Signing",
+    "status": "expired"
+  },
+  {
+    "id": "csk-009",
+    "keyAlias": "chrome-extension",
+    "algorithm": "ECDSA-256",
+    "protectionLevel": "Software",
+    "createdAt": "2024-08-30T09:15:00Z",
+    "lastUsed": "2025-12-10T16:45:00Z",
+    "expiryDate": "2026-08-30T09:15:00Z",
+    "usage": "Chrome Extension Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-010",
+    "keyAlias": "firmware-signing-key",
+    "algorithm": "RSA-4096",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-01-08T12:00:00Z",
+    "lastUsed": "2025-12-16T14:00:00Z",
+    "expiryDate": "2027-01-08T12:00:00Z",
+    "usage": "IoT Firmware Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-011",
+    "keyAlias": "powershell-script-signing",
+    "algorithm": "RSA-2048",
+    "protectionLevel": "Software",
+    "createdAt": "2024-06-05T11:45:00Z",
+    "lastUsed": "2025-12-08T10:20:00Z",
+    "expiryDate": "2026-06-05T11:45:00Z",
+    "usage": "PowerShell Script Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-012",
+    "keyAlias": "api-jwt-signing",
+    "algorithm": "ECDSA-384",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-09-20T13:30:00Z",
+    "lastUsed": "2025-12-19T08:15:00Z",
+    "expiryDate": "2026-09-20T13:30:00Z",
+    "usage": "JWT Token Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-013",
+    "keyAlias": "saml-assertion-signing",
+    "algorithm": "RSA-4096",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-10-12T10:00:00Z",
+    "lastUsed": "2025-12-18T12:30:00Z",
+    "expiryDate": "2027-10-12T10:00:00Z",
+    "usage": "SAML Assertion Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-014",
+    "keyAlias": "email-smime-cert",
+    "algorithm": "RSA-2048",
+    "protectionLevel": "Software",
+    "createdAt": "2024-11-01T14:15:00Z",
+    "lastUsed": "2025-12-05T09:00:00Z",
+    "expiryDate": "2026-11-01T14:15:00Z",
+    "usage": "S/MIME Email Signing",
+    "status": "active"
+  },
+  {
+    "id": "csk-015",
+    "keyAlias": "code-commit-signing",
+    "algorithm": "ECDSA-256",
+    "protectionLevel": "Software",
+    "createdAt": "2024-12-10T08:30:00Z",
+    "lastUsed": "2025-12-19T06:45:00Z",
+    "expiryDate": "2026-12-10T08:30:00Z",
+    "usage": "Git Commit Signing",
+    "status": "active"
+  }
+]
