@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { SSHKey, SortConfig } from '../types';
-import { Search, ChevronDown, ChevronUp, ChevronRight, Server, Bookmark, Edit } from 'lucide-react';
+import { Search, ChevronDown, ChevronRight, Bookmark } from 'lucide-react';
 import { TableSkeleton } from '../components/common/Skeleton';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { storageUtils } from '../utils/storage';

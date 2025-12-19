@@ -132,10 +132,6 @@ export const AuditLogs = () => {
     );
   };
 
-  const uniqueActionTypes = Array.from(
-    new Set(allLogs.map((log) => log.actionType))
-  ).sort();
-
   if (loading && allLogs.length === 0) {
     return (
       <div className="animate-fade-in">
@@ -215,7 +211,7 @@ export const AuditLogs = () => {
 
         <div className="overflow-x-auto">
           <div className="p-6 space-y-4">
-            {displayedLogs.map((log, index) => (
+            {displayedLogs.map((log) => (
               <div key={log.id}>
                 <div
                   className="flex gap-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30 p-4 rounded-lg transition-colors"

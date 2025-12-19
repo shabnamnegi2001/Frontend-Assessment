@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import type { Certificate, SortConfig } from '../types';
-import { Eye, Edit, Search, ChevronDown, Download } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { Modal } from '../components/common/Modal';
 import { Drawer } from '../components/common/Drawer';
 import { TableSkeleton } from '../components/common/Skeleton';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { Pagination } from '../components/common/Pagination';
 import { storageUtils } from '../utils/storage';
-import { formatDate, getDaysUntilExpiry } from '../utils/dateUtils';
+import { formatDate } from '../utils/dateUtils';
 import certificatesData from '../data/certificates.json';
 
 const ITEMS_PER_PAGE = 5;
@@ -22,7 +22,6 @@ export const Certificates = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [domainFilter, setDomainFilter] = useState('');
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     field: 'expiryDate',
     direction: 'asc',
@@ -34,7 +33,8 @@ export const Certificates = () => {
 
   useEffect(() => {
     filterAndSort();
-  }, [certificates, domainFilter, sortConfig]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [certificates, sortConfig]);
 
   const loadData = async () => {
     try {
@@ -62,13 +62,6 @@ export const Certificates = () => {
 
   const filterAndSort = () => {
     let result = [...certificates];
-
-    // Filter by domain
-    if (domainFilter) {
-      result = result.filter((cert) =>
-        cert.domain.toLowerCase().includes(domainFilter.toLowerCase())
-      );
-    }
 
     // Sort
     result.sort((a, b) => {

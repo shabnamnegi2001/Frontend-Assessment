@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { CodeSigningKey, ViewMode } from '../types';
-import { Grid, List, Shield, Key, ChevronDown, Search, LayoutGrid } from 'lucide-react';
+import { Shield, Key, ChevronDown, Search } from 'lucide-react';
 import { TableSkeleton, CardSkeleton } from '../components/common/Skeleton';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { storageUtils } from '../utils/storage';
@@ -12,7 +12,6 @@ export const CodeSigning = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('table');
-  const [protectionFilter, setProtectionFilter] = useState<'HSM' | 'Software' | ''>('');
 
   useEffect(() => {
     loadData();
@@ -42,15 +41,7 @@ export const CodeSigning = () => {
     }
   };
 
-  const toggleView = () => {
-    const newView = viewMode === 'table' ? 'grid' : 'table';
-    setViewMode(newView);
-    storageUtils.setPreference('codeSigningView', newView);
-  };
-
-  const filteredKeys = protectionFilter
-    ? keys.filter((key) => key.protectionLevel === protectionFilter)
-    : keys;
+  const filteredKeys = keys;
 
   const getProtectionBadge = (level: CodeSigningKey['protectionLevel']) => {
     if (level === 'HSM') {
